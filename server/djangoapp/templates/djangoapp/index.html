@@ -15,10 +15,12 @@
 
     <body>
     <!--Add a nav bar here -->
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
-            <div class="navbar-header">
-                  <a class="navbar-brand" href="#">Car Dealership</a>
+            <div class="navbar-brand">
+              <a class="navbar-brand" href="#">Dealership Review</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact</a>
             </div>
         </div>
     </nav>

@@ -16,7 +16,18 @@
     <body>
         Sample About Us page
     <!--Add a nav bar here -->
-    <nav>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+              <a class="navbar-brand" href="#">Dealership Review</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact</a>
+            </div>
+        </div>
+    </nav>
+    <h1>
+        Welcome to Best Cars dealership, home to the best cars in North America. We sell domestic and imported cars at reasonable prices.
+    </h1>
 
     <!--Add a dealer table here -->
 

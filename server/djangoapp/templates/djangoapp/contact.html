@@ -14,10 +14,21 @@
 </head>
 
     <body>
-        Sample Contact Page
     <!--Add a nav bar here -->
-    <nav>
-
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+              <a class="navbar-brand" href="#">Dealership Review</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About</a>
+              <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact</a>
+            </div>
+        </div>
+    </nav>
+    <h1>
+        Welcome to Best Cars dealership
+    </h1>
+    Located at CarDealers ST number 3451 W<br>
+    You can call by phone as at 9474-4536-5555
     <!--Add a dealer table here -->
 
     </body>
