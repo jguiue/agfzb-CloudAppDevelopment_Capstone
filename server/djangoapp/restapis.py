@@ -3,6 +3,9 @@ import json
 # import related models here
 from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_watson.natural_language_understanding_v1 import Features,SentimentOptions
 
 
 # Create a `get_request` to make HTTP GET requests
@@ -10,16 +13,31 @@ from requests.auth import HTTPBasicAuth
 #                                     auth=HTTPBasicAuth('apikey', api_key))
 def get_request(url, **kwargs):
     #print(kwargs)
+    api_key = kwargs.get("api_key")
+    print("API KEY NLU:",api_key)
     #print("URL llamada {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+        #response = requests.get(url, headers={'Content-Type': 'application/json'},
+        #                           params=kwargs)
+        if api_key:
+            params = dict()
+            params["text"] = kwargs["text"]
+            params["version"] = kwargs["version"]
+            params["features"] = kwargs["features"]
+            params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+            response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                    auth=HTTPBasicAuth('apikey', api_key))
+        else:
+            # Call get method of requests library with URL and parameters
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
+   
     except:
         # If any error occurs
         print("Network exception occurred")
     status_code = response.status_code
-    #print("With status {} ".format(status_code))
+    print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
 
@@ -114,18 +132,25 @@ def get_dealer_reviews_from_cf(url, **kwargs):
             if "car_year" in dealer_review:
                 review_obj.car_year = dealer_review["car_year"]
             
-            #sentiment = analyze_review_sentiments(review_obj.review)
-            #print(sentiment)
-            #review_obj.sentiment = sentiment
+            sentiment = analyze_review_sentiments(review_obj.review)
+            print(sentiment)
+            review_obj.sentiment = sentiment
             results.append(review_obj)
 
     return results
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(text): 
+    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/c1b7fa5c-e0c9-4d97-abc4-1731df5306d0" 
+    api_key = "zXNKFLLXmNA4FPwHGxOIiZKFCn_8paOV2C1zkVpuCKSD" 
+    authenticator = IAMAuthenticator(api_key) 
+    natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator) 
+    natural_language_understanding.set_service_url(url) 
+    response = natural_language_understanding.analyze( text=text+"hello hello hello" ,features=Features(sentiment=SentimentOptions(targets=[text+"hello hello hello"]))).get_result() 
+    label=json.dumps(response, indent=2) 
+    label = response['sentiment']['document']['label'] 
 
-
-
+    return label 
